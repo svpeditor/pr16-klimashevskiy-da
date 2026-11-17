@@ -1,10 +1,14 @@
 digraph C {
-graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.4];
+graph [rankdir=TB, bgcolor="white", pad=0.2, nodesep=0.35, ranksep=0.5];
 node [shape=record, style="filled", fontname="Times New Roman", fontsize=10, color="#2F5597", fillcolor="#F7FBFF"];
 edge [fontname="Times New Roman", fontsize=9, color="#555555"];
-p [label="{DocumentProcessor||+ process(Document) ProcessingResult\l}", fillcolor="#F7FBFF", color="#2F5597"];
-b [label="{BatchProcessor\nTODO|- executor ExecutorService\l|+ processAll(List[Document]) BatchResult\l}", fillcolor="#FDE9E7", color="#C00000"];
-res [label="{BatchResult\nTODO|- successCount AtomicInteger\l- errors ConcurrentMap\l|+ registerSuccess()\l+ registerError(...)\l}", fillcolor="#FDE9E7", color="#C00000"];
+b [label="{BatchProcessor|+ MIN_POOL_SIZE = 1 int\l+ MAX_POOL_SIZE = 25 int\l- processor DocumentProcessor\l|+ BatchProcessor(DocumentProcessor)\l+ processAll(List[Document], int) BatchResult\l+ processSequential(List[Document]) BatchResult\l- checkIds(List[Document]) void\l}"];
+p [label="{DocumentProcessor||+ process(Document) ProcessingResult\l}"];
+res [label="{BatchResult|- success AtomicInteger\l- errors ConcurrentMap[String,String]\l|+ registerSuccess() void\l+ registerError(String, String) void\l+ successCount() int\l+ errorCount() int\l+ errors() ConcurrentMap[String,String]\l}"];
+d [label="{«record» Document|- id String\l- sizeKb int\l- type String\l}"];
+pr [label="{«record» ProcessingResult|- documentId String\l- checksum long\l}"];
 b -> p [label="uses",arrowtail=odiamond,dir=both];
 b -> res [label="returns",style=dashed,arrowhead=open];
+p -> d [label="reads",style=dashed,arrowhead=open];
+p -> pr [label="creates",style=dashed,arrowhead=open];
 }
