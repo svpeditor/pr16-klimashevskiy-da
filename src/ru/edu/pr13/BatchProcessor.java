@@ -11,8 +11,9 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
 public class BatchProcessor {
+    // вариант 4: размер пула от 1 до 25 (было от 1 до 8)
     public static final int MIN_POOL_SIZE = 1;
-    public static final int MAX_POOL_SIZE = 8;
+    public static final int MAX_POOL_SIZE = 25;
 
     private final DocumentProcessor processor;
 

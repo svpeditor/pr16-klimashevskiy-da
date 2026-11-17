@@ -21,6 +21,7 @@ public class SelfCheck {
         checkErrors();
         checkThreadSafety();
         checkShutdown();
+        checkVariant();
         System.out.println("Unit: " + passed + "/" + count + " passed");
         compareTime();
         // свой файл и размер пула: java -cp out ru.edu.pr13.SelfCheck data/my.csv 4
@@ -84,6 +85,14 @@ public class SelfCheck {
             }
         }
         check("pool threads finished", alive == 0);
+    }
+
+    private static void checkVariant() {
+        // вариант 4: пул до 25 потоков
+        check("variant max pool 25", BatchProcessor.MAX_POOL_SIZE == 25);
+        check("variant pool 9", tryPool(sample(), 9));
+        check("variant pool 25", BATCH.processAll(sample(), 25).successCount() == 4);
+        check("variant pool 26", !tryPool(sample(), 26));
     }
 
     // время зависит от компьютера, ускорение не гарантия
